@@ -38,10 +38,6 @@ app.get("/js/scripts.js", function(req, res) {
     res.sendFile(path.join(__dirname + "/js/scripts.js"));
 });
 
-app.get("/js/click.js", function(req, res) {
-    res.sendFile(path.join(__dirname + "/js/click.js"));
-});
-
 app.post("/update", function(req, res) {
     let dataString = '';
     req.on( 'data', function( data ) {
