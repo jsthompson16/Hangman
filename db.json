@@ -1,0 +1,64 @@
+{
+  "users": [
+    {
+      "username": "jarod",
+      "password": "hello",
+      "gameState": {
+        "score": 46105,
+        "currency": 22675,
+        "PlayerObj": {
+          "attack": 1878,
+          "crit": 7.555871628527948,
+          "level": 23
+        },
+        "EnemyObj": {
+          "health": 28613,
+          "filepath": "../img/bowser-jr.png",
+          "tier": 2
+        },
+        "attackCost": 31250,
+        "critCost": 62500
+      }
+    },
+    {
+      "username": "cem",
+      "password": "hello",
+      "gameState": {
+        "score": 28,
+        "currency": 28,
+        "PlayerObj": {
+          "attack": 10,
+          "crit": 0,
+          "level": 2
+        },
+        "EnemyObj": {
+          "health": 158,
+          "filepath": "../img/bokoblin.png",
+          "tier": 1
+        },
+        "attackCost": 10,
+        "critCost": 20
+      }
+    },
+    {
+      "username": "c",
+      "password": "c2",
+      "gameState": {
+        "score": 44096,
+        "currency": 4416,
+        "PlayerObj": {
+          "attack": 5609,
+          "crit": 3.414213562373095,
+          "level": 22
+        },
+        "EnemyObj": {
+          "health": 22143,
+          "filepath": "../img/bowser.png",
+          "tier": 3
+        },
+        "attackCost": 156250,
+        "critCost": 2500
+      }
+    }
+  ]
+}
