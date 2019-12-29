@@ -50,6 +50,10 @@ const teams = ["Boston Red Sox", "New York Yankees", "Tampa Bay Rays", "Baltimor
     "Washington Nationals", "Philadelphia Phillies", "New York Mets", "Atlanta Braves", "Miami Marlins",
     "St Louis Cardinals", "Milwaukee Brewers", "Chicago Cubs", "Cincinnati Reds", "Pittsburgh Pirates",
     "Los Angeles Dodgers", "San Diego Padres", "San Francisco Giants", "Colorado Rockies", "Arizona Diamondbacks"];
+let word;
+let letterCount = 0;
+let lineDistance;
+let game;
 
 const viewLeaderboard = function() {
     document.getElementById('table').style.display = "flex";
@@ -117,7 +121,7 @@ const pixiInit = async function () {
 
     const canvas = document.getElementById("game-canvas");
 
-    const game = new PIXI.Application({
+    game = new PIXI.Application({
         view: canvas,
         width: window.innerWidth,
         height: window.innerHeight,
@@ -127,30 +131,43 @@ const pixiInit = async function () {
 
     const lines = new PIXI.Graphics();
     const lineHeight = window.innerHeight * 4 / 5;
-    lines.lineStyle(5, 0xFFFFFF, 1);
+    lines.lineStyle(5, 0xB8B4B4, 1);
 
-    let word = teams[getRandomInt(30)];
-    let lineDistance = window.innerWidth / (word.length + 1);
+    word = teams[getRandomInt(30)];
+    lineDistance = window.innerWidth / (word.length + 1);
     let currentLinePosition = lineDistance - 15;
     lines.moveTo(currentLinePosition, lineHeight);
-    
-    for (let i = 0; i <= word.length; i++) {
+
+    for (let i = 0; i < word.length; i++) {
         if (word[i] !== ' ') {
             lines.lineTo(currentLinePosition + 30, lineHeight);
-            currentLinePosition += lineDistance;
-            lines.moveTo(currentLinePosition, lineHeight);
+            letterCount++;
         }
-        else {
-            currentLinePosition += lineDistance;
-            lines.moveTo(currentLinePosition, lineHeight);
-        }
+        currentLinePosition += lineDistance;
+        lines.moveTo(currentLinePosition, lineHeight);
     }
 
     game.stage.addChild(lines);
-
-    //let damageText = new PIXI.Text('0',{fontFamily : 'Arial', fontSize: 24, fill : 0xff0030, align : 'center'});
-
 };
+
+document.addEventListener('keypress', function(event) {
+    let hasLetter = false;
+    for (let i = 0; i < word.length; i++) {
+        if (word[i].toLowerCase() === event.key.toLowerCase()) {
+            hasLetter = true;
+            let letter = new PIXI.Text(word[i],{fontFamily : 'Cambria', fontSize: 45, fill : 0xffffff, align : 'center'});
+            if (word[i] === 'l' || word[i] === 'f' || word[i] === 'i' || word[i] === 'I' || word[i] === 'j' ||
+                word[i] === 'J' || word[i] === 'r' || word[i] === 't' || word[i] === 's')
+                letter.position.x = (i + 1) * lineDistance - 7.5;
+            else if (word[i] === 'm')
+                letter.position.x = (i + 1) * lineDistance - 17;
+            else
+                letter.position.x = (i + 1) * lineDistance - 13;
+            letter.position.y = ((window.innerHeight * 4) / 5) - 52;
+            game.stage.addChild(letter);
+        }
+    }
+});
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
