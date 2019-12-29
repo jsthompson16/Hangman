@@ -44,6 +44,13 @@ const updatePlayer = function(eHP, eSrc, etier) {
     })
 };
 
+const teams = ["Boston Red Sox", "New York Yankees", "Tampa Bay Rays", "Baltimore Orioles", "Toronto Blue Jays",
+    "Detroit Tigers", "Chicago White Sox", "Kansas City Royals", "Cleveland Indians", "Minnesota Twins",
+    "Houston Astros", "Seattle Mariners", "Oakland Athletics", "Los Angeles Angels", "Texas Rangers",
+    "Washington Nationals", "Philadelphia Phillies", "New York Mets", "Atlanta Braves", "Miami Marlins",
+    "St Louis Cardinals", "Milwaukee Brewers", "Chicago Cubs", "Cincinnati Reds", "Pittsburgh Pirates",
+    "Los Angeles Dodgers", "San Diego Padres", "San Francisco Giants", "Colorado Rockies", "Arizona Diamondbacks"];
+
 const viewLeaderboard = function() {
     document.getElementById('table').style.display = "flex";
     document.getElementById('back-button').style.display = "flex";
@@ -108,52 +115,43 @@ const login = function (e) {
 
 const pixiInit = async function () {
 
-    /*
-    const username = {
-        username: document.getElementById("current-username").value
-    };
-
-    const body = JSON.stringify(username);
-
-    const response = await fetch('/getGameState', {
-        method: 'POST',
-        body
-    });
-    const data = await response.json();
-    const state = data.data;
-
-     */
-
     const canvas = document.getElementById("game-canvas");
 
     const game = new PIXI.Application({
         view: canvas,
         width: window.innerWidth,
         height: window.innerHeight,
-        backgroundColor: 0x333333,
+        backgroundColor: 0x000000,
         antialias: true
     });
 
-    const enemyTexture = PIXI.Texture.from("../img/bokoblin.png");
-    const enemy = new PIXI.Sprite(enemyTexture);
+    const lines = new PIXI.Graphics();
+    const lineHeight = window.innerHeight * 4 / 5;
+    lines.lineStyle(5, 0xFFFFFF, 1);
 
-    enemy.x = (game.renderer.width * 5) / 6;
-    enemy.y = game.renderer.height / 2;
-    enemy.anchor.x = 0.5;
-    enemy.anchor.y = 0.5;
+    let word = teams[getRandomInt(30)];
+    let lineDistance = window.innerWidth / (word.length + 1);
+    let currentLinePosition = lineDistance - 15;
+    lines.moveTo(currentLinePosition, lineHeight);
+    
+    for (let i = 0; i <= word.length; i++) {
+        if (word[i] !== ' ') {
+            lines.lineTo(currentLinePosition + 30, lineHeight);
+            currentLinePosition += lineDistance;
+            lines.moveTo(currentLinePosition, lineHeight);
+        }
+        else {
+            currentLinePosition += lineDistance;
+            lines.moveTo(currentLinePosition, lineHeight);
+        }
+    }
 
-    const playerTexture = PIXI.Texture.from("../img/link.png");
-    const player = new PIXI.Sprite(playerTexture);
-
-    player.x = game.renderer.width / 6;
-    player.y = game.renderer.height / 2;
-    player.anchor.x = 0.5;
-    player.anchor.y = 0.5;
-
-    game.stage.addChild(enemy);
-    game.stage.addChild(player);
+    game.stage.addChild(lines);
 
     //let damageText = new PIXI.Text('0',{fontFamily : 'Arial', fontSize: 24, fill : 0xff0030, align : 'center'});
 
 };
 
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
