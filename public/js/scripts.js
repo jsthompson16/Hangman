@@ -162,7 +162,7 @@ document.addEventListener('keypress', function(event) {
             if (word[i] === 'l' || word[i] === 'f' || word[i] === 'i' || word[i] === 'I' || word[i] === 'j' ||
                 word[i] === 'J' || word[i] === 'r' || word[i] === 't' || word[i] === 's')
                 letter.position.x = (i + 1) * lineDistance - 7.5;
-            else if (word[i] === 'm')
+            else if (word[i] === 'm' || word[i] === 'M')
                 letter.position.x = (i + 1) * lineDistance - 17;
             else
                 letter.position.x = (i + 1) * lineDistance - 13;
@@ -179,7 +179,60 @@ document.addEventListener('keypress', function(event) {
     }
 
     if (!foundALetter) {
-        //Draw something based on incorrectGuesses
+        let hangman = new PIXI.Graphics();
+        hangman.lineStyle(5, 0xB8B4B4, 1);
+        switch (incorrectGuesses) {
+            case 0:
+                hangman.moveTo(200, window.innerHeight / 2 + 100);
+                hangman.lineTo(400, window.innerHeight / 2 + 100);
+                break;
+            case 1:
+                hangman.moveTo(350, window.innerHeight / 2 + 100);
+                hangman.lineTo(350, window.innerHeight / 3 - 70);
+                break;
+            case 2:
+                hangman.moveTo(350, window.innerHeight / 3 - 70);
+                hangman.lineTo(275, window.innerHeight / 3 - 70);
+                break;
+            case 3:
+                hangman.moveTo(275, window.innerHeight / 3 - 70);
+                hangman.lineTo(275, window.innerHeight / 3 - 20);
+                break;
+            case 4:
+                hangman.moveTo(275, window.innerHeight / 3 - 20);
+                hangman.drawCircle(275, window.innerHeight / 3, 20);
+                break;
+            case 5:
+                hangman.moveTo(275, window.innerHeight / 3 + 20);
+                hangman.lineTo(275, window.innerHeight / 2);
+                break;
+            case 6:
+                hangman.moveTo(275, window.innerHeight / 2);
+                hangman.lineTo(300, window.innerHeight / 2 + 60);
+                break;
+            case 7:
+                hangman.moveTo(275, window.innerHeight / 2);
+                hangman.lineTo(250, window.innerHeight / 2 + 60);
+                break;
+            case 8:
+                hangman.moveTo(275, window.innerHeight / 2 - 30);
+                hangman.lineTo(310, window.innerHeight / 2 - 90);
+                break;
+            case 9:
+                hangman.moveTo(275, window.innerHeight / 2 - 30);
+                hangman.lineTo(240, window.innerHeight / 2 - 90);
+                break;
+            default:
+                console.log("This shouldn't happen");
+                break;
+        }
+
+        game.stage.addChild(hangman);
+        incorrectGuesses++;
+
+        if (incorrectGuesses === 9) {
+            console.log("You have lost the game");
+        }
     }
 });
 
