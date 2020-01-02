@@ -10,6 +10,7 @@ let numLetters = 0;
 let numFoundLetters = 0;
 let foundLetters = [];
 let incorrectGuesses = 0;
+let incorrectLetters = [];
 let lineDistance;
 let game;
 
@@ -38,8 +39,10 @@ const resetGame = function() {
 
     word = '';
     numLetters = 0;
+    numFoundLetters = 0;
     foundLetters = [];
     incorrectGuesses = 0;
+    incorrectLetters = [];
     lineDistance = 0;
     game.destroy();
 
@@ -51,6 +54,7 @@ const viewLeaderboard = function() {
     document.getElementById('back-button').style.display = "flex";
     document.getElementById('leaderboard-button').style.display = "none";
     document.getElementById('game-canvas').style.display = "none";
+    document.getElementById('new-game-button').style.display = "none";
 
     fetchLeaderboard();
     return false;
@@ -61,6 +65,9 @@ const viewGame = function() {
     document.getElementById('back-button').style.display = "none";
     document.getElementById('game-canvas').style.display = "flex";
     document.getElementById('leaderboard-button').style.display = "flex";
+
+    if (numLetters === numFoundLetters || incorrectGuesses === 10)
+        document.getElementById('new-game-button').style.display = "flex";
 };
 
 const fetchLeaderboard = async function() {
@@ -147,6 +154,11 @@ document.addEventListener('keypress', function(event) {
 
     for (let j = 0; j < foundLetters.length; j++) {
         if (foundLetters[j].toLowerCase() === event.key.toLowerCase())
+            alreadyGuessedLetter = true;
+    }
+
+    for (let k = 0; k < incorrectLetters.length; k++) {
+        if (incorrectLetters[k].toLowerCase() === event.key.toLowerCase())
             alreadyGuessedLetter = true;
     }
 
