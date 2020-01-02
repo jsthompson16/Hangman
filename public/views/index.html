@@ -46,6 +46,10 @@
         <table id="leaderboard"></table>
     </div>
 
+    <div id="new-game-button">
+        <button>Play Again</button>
+    </div>
+
     <div class="currentUser">
         <label for="current-username" class="label"></label>
         <input type='text' id='current-username'>
@@ -63,6 +67,9 @@
 
         const backButton = document.getElementById( 'back-button' );
         backButton.onclick = viewGame;
+
+        const playAgainButton = document.getElementById( 'new-game-button' );
+        playAgainButton.onclick = resetGame;
     }
 
 </script>

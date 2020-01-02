@@ -2,7 +2,7 @@
     font-family: 'Cambria';
 }
 
-:root{
+:root {
     --black: #000000;
     --orange: #FFB53C;
     --blue: #AAD2FF;
@@ -32,33 +32,24 @@
     align-items: center;
 }
 
-.game{
+.game {
     position: absolute;
     top: 0;
     left: 0;
 }
 
-.enemy{
-    position: absolute;
-    right: 5%;
-}
-
-progress[value] {
-    -webkit-appearance: none;
-    appearance: none;
-
-}
-
-.enemy progress[value]::-webkit-progress-bar {
-    background-color: var(--red);
-    transition: width 1s ease;
-}
-
-#leaderboard-button{
+#leaderboard-button {
     display: none;
     position: absolute;
     top: 5px;
     right: 5px;
+}
+
+#new-game-button {
+    display: none;
+    position: absolute;
+    top: 340px;
+    left: 985px;
 }
 
 #back-button {

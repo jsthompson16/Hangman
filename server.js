@@ -46,10 +46,17 @@ app.post("/update", function(req, res) {
 
     req.on( 'end', function() {
         const updatedUser = JSON.parse(dataString);
-        db.get('users')
-            .find({ username: updatedUser.username })
-            .assign({ gameState: updatedUser.gameState})
-            .write();
+
+        if (updatedUser.gamesWon === 1)
+            db.get('users')
+                .find({ username: updatedUser.username })
+                .update('gamesWon', n => n + 1)
+                .write();
+        else
+            db.get('users')
+                .find({ username: updatedUser.username })
+                .update('gamesLost', n => n + 1)
+                .write();
 
         res.writeHead( 200, "OK", {'Content-Type': 'text/plain' });
         res.end();
