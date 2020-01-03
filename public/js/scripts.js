@@ -146,6 +146,16 @@ const pixiInit = async function () {
     }
 
     game.stage.addChild(lines);
+
+    let guesses = new PIXI.Text("Incorrect Guesses:", {
+        fontFamily: 'Cambria',
+        fontSize: 30,
+        fill: 0xffffff,
+        align: 'center'
+    });
+    guesses.position.x = window.innerWidth / 4;
+    guesses.position.y = window.innerHeight - 85;
+    game.stage.addChild(guesses);
 };
 
 document.addEventListener('keypress', function(event) {
@@ -250,6 +260,17 @@ document.addEventListener('keypress', function(event) {
 
             game.stage.addChild(hangman);
             incorrectGuesses++;
+            incorrectLetters.push(event.key.toLowerCase());
+
+            let incorrectLetter = new PIXI.Text(event.key.toLowerCase(), {
+                fontFamily: 'Cambria',
+                fontSize: 30,
+                fill: 0xffffff,
+                align: 'center'
+            });
+            incorrectLetter.position.x = window.innerWidth * 2 / 5 - 20 + (40 * incorrectGuesses);
+            incorrectLetter.position.y = window.innerHeight - 85;
+            game.stage.addChild(incorrectLetter);
 
             if (incorrectGuesses === 10) {
                 let loss = new PIXI.Text("You lost.", {

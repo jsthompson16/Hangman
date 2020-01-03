@@ -83,7 +83,8 @@ const myLocalStrategy = function(username, password, done) {
         const newUser = {
             'username': username,
             'password': password,
-            'gameState': {'score': 0}
+            'gamesWon': 0,
+            'gamesLost': 0
         };
 
         db.get( 'users' ).push(newUser).write();
