@@ -45,13 +45,6 @@
     right: 5px;
 }
 
-#new-game-button {
-    display: none;
-    position: absolute;
-    top: 340px;
-    left: 985px;
-}
-
 #back-button {
     display: none;
     font-size: 1.5em;

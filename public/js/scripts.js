@@ -5,7 +5,7 @@ const teams = ["Boston Red Sox", "New York Yankees", "Tampa Bay Rays", "Baltimor
     "Washington Nationals", "Philadelphia Phillies", "New York Mets", "Atlanta Braves", "Miami Marlins",
     "St Louis Cardinals", "Milwaukee Brewers", "Chicago Cubs", "Cincinnati Reds", "Pittsburgh Pirates",
     "Los Angeles Dodgers", "San Diego Padres", "San Francisco Giants", "Colorado Rockies", "Arizona Diamondbacks"];
-let word;
+let word = '';
 let numLetters = 0;
 let numFoundLetters = 0;
 let foundLetters = [];
@@ -30,7 +30,6 @@ const updatePlayer = function(gamesWon, gamesLost) {
 };
 
 const resetGame = function() {
-    document.getElementById('new-game-button').style.display = "none";
 
     if (incorrectGuesses === 10)
         updatePlayer(0, 1);
@@ -54,7 +53,6 @@ const viewLeaderboard = function() {
     document.getElementById('back-button').style.display = "flex";
     document.getElementById('leaderboard-button').style.display = "none";
     document.getElementById('game-canvas').style.display = "none";
-    document.getElementById('new-game-button').style.display = "none";
 
     fetchLeaderboard();
     return false;
@@ -65,9 +63,6 @@ const viewGame = function() {
     document.getElementById('back-button').style.display = "none";
     document.getElementById('game-canvas').style.display = "flex";
     document.getElementById('leaderboard-button').style.display = "flex";
-
-    if (numLetters === numFoundLetters || incorrectGuesses === 10)
-        document.getElementById('new-game-button').style.display = "flex";
 };
 
 const fetchLeaderboard = async function() {
@@ -131,7 +126,8 @@ const pixiInit = async function () {
     const lineHeight = window.innerHeight * 4 / 5;
     lines.lineStyle(5, 0xB8B4B4, 1);
 
-    word = teams[getRandomInt(30)];
+    if (word === '')
+        word = teams[getRandomInt(30)];
     lineDistance = window.innerWidth / (word.length + 1);
     let currentLinePosition = lineDistance - 15;
     lines.moveTo(currentLinePosition, lineHeight);
@@ -153,8 +149,9 @@ const pixiInit = async function () {
         fill: 0xffffff,
         align: 'center'
     });
-    guesses.position.x = window.innerWidth / 4;
+    guesses.position.x = (window.innerWidth * 2) / 5;
     guesses.position.y = window.innerHeight - 85;
+    guesses.anchor.set(1, 0);
     game.stage.addChild(guesses);
 };
 
@@ -204,61 +201,13 @@ document.addEventListener('keypress', function(event) {
                     win.position.x = window.innerWidth / 2 + 200;
                     win.position.y = window.innerHeight / 2 - 75;
                     game.stage.addChild(win);
-                    document.getElementById('new-game-button').style.display = "flex";
+                    drawPlayAgain();
                 }
             }
         }
 
         if (!foundALetter) {
-            let hangman = new PIXI.Graphics();
-            hangman.lineStyle(5, 0xB8B4B4, 1);
-            switch (incorrectGuesses) {
-                case 0:
-                    hangman.moveTo(200, window.innerHeight / 2 + 100);
-                    hangman.lineTo(400, window.innerHeight / 2 + 100);
-                    break;
-                case 1:
-                    hangman.moveTo(350, window.innerHeight / 2 + 100);
-                    hangman.lineTo(350, window.innerHeight / 3 - 70);
-                    break;
-                case 2:
-                    hangman.moveTo(350, window.innerHeight / 3 - 70);
-                    hangman.lineTo(275, window.innerHeight / 3 - 70);
-                    break;
-                case 3:
-                    hangman.moveTo(275, window.innerHeight / 3 - 70);
-                    hangman.lineTo(275, window.innerHeight / 3 - 20);
-                    break;
-                case 4:
-                    hangman.moveTo(275, window.innerHeight / 3 - 20);
-                    hangman.drawCircle(275, window.innerHeight / 3, 20);
-                    break;
-                case 5:
-                    hangman.moveTo(275, window.innerHeight / 3 + 20);
-                    hangman.lineTo(275, window.innerHeight / 2);
-                    break;
-                case 6:
-                    hangman.moveTo(275, window.innerHeight / 2);
-                    hangman.lineTo(300, window.innerHeight / 2 + 60);
-                    break;
-                case 7:
-                    hangman.moveTo(275, window.innerHeight / 2);
-                    hangman.lineTo(250, window.innerHeight / 2 + 60);
-                    break;
-                case 8:
-                    hangman.moveTo(275, window.innerHeight / 2 - 30);
-                    hangman.lineTo(310, window.innerHeight / 2 - 90);
-                    break;
-                case 9:
-                    hangman.moveTo(275, window.innerHeight / 2 - 30);
-                    hangman.lineTo(240, window.innerHeight / 2 - 90);
-                    break;
-                default:
-                    console.log("This shouldn't happen");
-                    break;
-            }
-
-            game.stage.addChild(hangman);
+            drawHangman(true, 10);
             incorrectGuesses++;
             incorrectLetters.push(event.key.toLowerCase());
 
@@ -282,11 +231,84 @@ document.addEventListener('keypress', function(event) {
                 loss.position.x = window.innerWidth / 2 + 200;
                 loss.position.y = window.innerHeight / 2 - 75;
                 game.stage.addChild(loss);
-                document.getElementById('new-game-button').style.display = "flex";
+
+                drawPlayAgain();
             }
         }
     }
 });
+
+function drawPlayAgain() {
+    let playAgain = new PIXI.Text("Click here to play again!", {
+        fontFamily: 'Cambria',
+        fontSize: 30,
+        fill: 0xffffff,
+        align: 'center'
+    });
+    playAgain.position.x = window.innerWidth / 2 + 100;
+    playAgain.position.y = window.innerHeight / 2 - 15;
+    game.stage.addChild(playAgain);
+    playAgain.interactive = true;
+    playAgain.buttonMode = true;
+
+    playAgain.on('pointertap', () => {
+        resetGame();
+    });
+}
+
+function drawHangman(fromEventListener, specificCase) {
+    let hangman = new PIXI.Graphics();
+    hangman.lineStyle(5, 0xB8B4B4, 1);
+    if (fromEventListener)
+        specificCase = incorrectGuesses;
+    switch (specificCase) {
+        case 0:
+            hangman.moveTo(200, window.innerHeight / 2 + 100);
+            hangman.lineTo(400, window.innerHeight / 2 + 100);
+            break;
+        case 1:
+            hangman.moveTo(350, window.innerHeight / 2 + 100);
+            hangman.lineTo(350, window.innerHeight / 3 - 70);
+            break;
+        case 2:
+            hangman.moveTo(350, window.innerHeight / 3 - 70);
+            hangman.lineTo(275, window.innerHeight / 3 - 70);
+            break;
+        case 3:
+            hangman.moveTo(275, window.innerHeight / 3 - 70);
+            hangman.lineTo(275, window.innerHeight / 3 - 20);
+            break;
+        case 4:
+            hangman.moveTo(275, window.innerHeight / 3 - 20);
+            hangman.drawCircle(275, window.innerHeight / 3, 20);
+            break;
+        case 5:
+            hangman.moveTo(275, window.innerHeight / 3 + 20);
+            hangman.lineTo(275, window.innerHeight / 2);
+            break;
+        case 6:
+            hangman.moveTo(275, window.innerHeight / 2);
+            hangman.lineTo(300, window.innerHeight / 2 + 60);
+            break;
+        case 7:
+            hangman.moveTo(275, window.innerHeight / 2);
+            hangman.lineTo(250, window.innerHeight / 2 + 60);
+            break;
+        case 8:
+            hangman.moveTo(275, window.innerHeight / 2 - 30);
+            hangman.lineTo(310, window.innerHeight / 2 - 90);
+            break;
+        case 9:
+            hangman.moveTo(275, window.innerHeight / 2 - 30);
+            hangman.lineTo(240, window.innerHeight / 2 - 90);
+            break;
+        default:
+            console.log("This shouldn't happen");
+            break;
+    }
+
+    game.stage.addChild(hangman);
+}
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
