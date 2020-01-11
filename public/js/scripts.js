@@ -211,15 +211,7 @@ document.addEventListener('keypress', function(event) {
             incorrectGuesses++;
             incorrectLetters.push(event.key.toLowerCase());
 
-            let incorrectLetter = new PIXI.Text(event.key.toLowerCase(), {
-                fontFamily: 'Cambria',
-                fontSize: 30,
-                fill: 0xffffff,
-                align: 'center'
-            });
-            incorrectLetter.position.x = window.innerWidth * 2 / 5 - 20 + (40 * incorrectGuesses);
-            incorrectLetter.position.y = window.innerHeight - 85;
-            game.stage.addChild(incorrectLetter);
+            drawIncorrectLetter(true, 10, event.key.toLowerCase());
 
             if (incorrectGuesses === 10) {
                 let loss = new PIXI.Text("You lost.", {
@@ -238,6 +230,57 @@ document.addEventListener('keypress', function(event) {
     }
 });
 
+
+window.addEventListener("resize", function() {
+    if (window.innerWidth > 700 && window.innerHeight > 600) {
+        game.destroy();
+        numLetters = 0;
+        pixiInit();
+
+        for (let i = 0; i < word.length; i++) {
+            for (let j = 0; j < foundLetters.length; j++) {
+                if (word[i].toLowerCase() === foundLetters[j].toLowerCase()) {
+                    let letter = new PIXI.Text(word[i], {
+                        fontFamily: 'Cambria',
+                        fontSize: 45,
+                        fill: 0xffffff,
+                        align: 'center'
+                    });
+                    if (word[i] === 'l' || word[i] === 'f' || word[i] === 'i' || word[i] === 'I' || word[i] === 'j' ||
+                        word[i] === 'J' || word[i] === 'r' || word[i] === 't' || word[i] === 's')
+                        letter.position.x = (i + 1) * lineDistance - 7.5;
+                    else if (word[i] === 'm' || word[i] === 'M')
+                        letter.position.x = (i + 1) * lineDistance - 17;
+                    else
+                        letter.position.x = (i + 1) * lineDistance - 13;
+                    letter.position.y = ((window.innerHeight * 4) / 5) - 52;
+                    game.stage.addChild(letter);
+
+                    if (numLetters === numFoundLetters) {
+                        let win = new PIXI.Text("You won!", {
+                            fontFamily: 'Cambria',
+                            fontSize: 30,
+                            fill: 0xffffff,
+                            align: 'center'
+                        });
+                        win.position.x = window.innerWidth / 2 + 200;
+                        win.position.y = window.innerHeight / 2 - 75;
+                        game.stage.addChild(win);
+
+                        drawPlayAgain();
+                    }
+                }
+            }
+        }
+
+        for (let k = 0; k < incorrectLetters.length; k++) {
+            drawIncorrectLetter(false, k + 1, incorrectLetters[k]);
+            drawHangman(false, k);
+        }
+    }
+});
+
+
 function drawPlayAgain() {
     let playAgain = new PIXI.Text("Click here to play again!", {
         fontFamily: 'Cambria',
@@ -254,6 +297,23 @@ function drawPlayAgain() {
     playAgain.on('pointertap', () => {
         resetGame();
     });
+}
+
+function drawIncorrectLetter(fromEventListener, specificCase, letter) {
+
+    if (fromEventListener) {
+        specificCase = incorrectGuesses;
+    }
+
+    let incorrectLetter = new PIXI.Text(letter, {
+        fontFamily: 'Cambria',
+        fontSize: 30,
+        fill: 0xffffff,
+        align: 'center'
+    });
+    incorrectLetter.position.x = window.innerWidth * 2 / 5 - 20 + (40 * specificCase);
+    incorrectLetter.position.y = window.innerHeight - 85;
+    game.stage.addChild(incorrectLetter);
 }
 
 function drawHangman(fromEventListener, specificCase) {
